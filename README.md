@@ -1,4 +1,4 @@
-# Pinocchio Proof-of-Concept (Simplified)
+# Pinocchio Proof-of-Concept (Simplificado)
 
 Este repositório contém uma implementação **didática** e **simplificada** do protocolo
 **[Pinocchio](https://www.andrew.cmu.edu/user/bparno/papers/pinocchio.pdf)** (SNARK baseado em QAPs), escrita em **SageMath**.  
@@ -16,7 +16,7 @@ Serve exclusivamente para fins educativos e experimentação.
 
 ---
 
-## 📁 Estrutura dos Arquivos
+## Estrutura dos Arquivos
 
 ### **`pinocchio_simple.sage`**
 Arquivo principal do sistema.  
@@ -47,7 +47,7 @@ Define a estrutura de um **QAP simplificado**, incluindo:
 
 ---
 
-## ▶️ Como Executar
+## Como Executar
 
 ### **Pré-requisitos**
 - Python 3
