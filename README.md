@@ -22,15 +22,13 @@ Serve exclusivamente para fins educativos e experimentação.
 Arquivo principal do sistema.  
 Contém:
 
-- Construção de um circuito de teste
-- Construção do QAP correspondente
 - Implementação simplificada do protocolo Pinocchio
   - `KeyGen`
   - `Prove`
   - `Verify`
-- Um simulador de grupos bilineares (placeholders)  
-  usado para evitar dependência de bibliotecas mais avançadas
-- Execução completa do fluxo de prova → verificação
+- Um simulador de grupos bilineares (placeholders) usado para evitar dependência de bibliotecas mais avançadas.
+- Utilização do arquivo `SimpleQAP.sage' para obter um QAP de um circuito simples.
+- Execução completa do fluxo de prova → verificação para o circuito em questão.
 
 Este arquivo é o **ponto de entrada** do projeto.
 
