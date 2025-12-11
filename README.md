@@ -62,7 +62,7 @@ Define a estrutura de um **QAP simplificado**, incluindo:
 sage pinocchio_simple.sage
 ```
 
-## 🔢 Entradas e Saídas do Circuito
+## Entradas e Saídas do Circuito
 
 No fluxo de execução do sistema, o circuito de teste é definido por um **vetor de entradas** `u_in` e uma **saída esperada** `u_out`.  
 
@@ -86,13 +86,13 @@ u_out = F(105)  # 3 * 5 * 7 = 105
 u = u_in + [u_out]
 ```
 
-### 💡 Observações
+### Observações
 
 1. `u_in` pode ser alterado para testar diferentes entradas do circuito.
 2. `u_out` deve ser consistente com a função do circuito; caso contrário, a prova não será válida.
 3. O vetor `u` é passado para as funções `evaluate_circuit` e `prover_make_proof`, e a verificação é feita em `verifier_check`.
 
-### 🖼 Circuito
+### Circuito
 
 Segue o diagrama do circuito de teste (arquivo `arithmetic_circuit.png`):
 
