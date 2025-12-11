@@ -60,3 +60,42 @@ Define a estrutura de um **QAP simplificado**, incluindo:
 
 ```bash
 sage pinocchio_simple.sage
+```
+
+## 🔢 Entradas e Saídas do Circuito
+
+No fluxo de execução do sistema, o circuito de teste é definido por um **vetor de entradas** `u_in` e uma **saída esperada** `u_out`.  
+
+- **`u_in`**: lista de elementos do campo `F` correspondentes às entradas do circuito.  
+  Exemplo no código:
+
+```python
+u_in = [F(3), F(5), F(7)]
+```
+
+- **`u_out`**: elemento do campo `F` que representa a saída alegada do circuito após aplicar a função definida pelo mesmo.  
+  No nosso circuito de teste, a saída é simplesmente o produto das entradas:
+
+```python
+u_out = F(105)  # 3 * 5 * 7 = 105
+```
+
+- **`u`**: combinação das entradas com a saída, usada para gerar a prova do SNARK:
+
+```python
+u = u_in + [u_out]
+```
+
+### 💡 Observações
+
+1. `u_in` pode ser alterado para testar diferentes entradas do circuito.
+2. `u_out` deve ser consistente com a função do circuito; caso contrário, a prova não será válida.
+3. O vetor `u` é passado para as funções `evaluate_circuit` e `prover_make_proof`, e a verificação é feita em `verifier_check`.
+
+### 🖼 Circuito
+
+Segue o diagrama do circuito de teste (arquivo `arithmetic_circuit.png`):
+
+![Circuito de teste](arithmetic_circuit.png)
+
+> A imagem acima ilustra as portas do circuito e como as entradas `u_in` são processadas para produzir `u_out`.

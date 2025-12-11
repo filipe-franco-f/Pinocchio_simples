@@ -1,5 +1,4 @@
 # Implementa uma versão didática e simplificada do protocolo Pinocchio
-# Usar em SageMath (ex.: executar dentro do REPL do Sage, ou `sage -python`).
 # Observação: esta implementação SIMULA grupos bilineares de forma algebraica
 # (representando elementos de G por expoentes inteiros) para facilidade de
 # entendimento e execução sem dependências criptográficas reais.
@@ -68,18 +67,10 @@ def keygen(sim: BilinearGroupSimulator, Q: SimpleQAP, field):
     # avaliar polinômios em s
     v_vals, w_vals, y_vals, t_val = Q.eval_vector_at(s)
 
-    # print("v_vals:", v_vals)
-    #print("w_vals:", w_vals)
-    #print("y_vals:", y_vals)
-    #print("t_val:", t_val)
-
     v_vals_io, v_vals_mid = v_vals[:Q.N+1], v_vals[Q.N+1:]
     w_vals_io, w_vals_mid = w_vals[:Q.N+1], w_vals[Q.N+1:]
     y_vals_io, y_vals_mid = y_vals[:Q.N+1], y_vals[Q.N+1:]
 
-    #print(v_vals_io, v_vals_mid)
-    #print(w_vals_io, w_vals_mid)
-    #print(y_vals_io, y_vals_mid)
 
     EK = {
         'g_v_vals': [sim.g_pow(r_v * v) for v in v_vals_mid],
@@ -91,7 +82,7 @@ def keygen(sim: BilinearGroupSimulator, Q: SimpleQAP, field):
         's_pows': [sim.g_pow(s**i) for i in range(1, Q.degree + 1)],
         'g_combinations': [sim.tri_element_mul(r_v * beta * v_vals_mid[k], r_w * beta * w_vals_mid[k], r_y * beta * y_vals_mid[k]) for k in range(len(v_vals_mid))]
     }
-    print("EK", EK)
+    print("EK:\n", EK)
 
     VK = {
         'g': sim.g,
@@ -107,7 +98,7 @@ def keygen(sim: BilinearGroupSimulator, Q: SimpleQAP, field):
         'g_y_io': [sim.g_pow(r_y * y_val_io) for y_val_io in y_vals_io],
     }
 
-    print("VK", VK)
+    print("VK:\n", VK)
 
     secrets = {
         'r_v': r_v, 'r_w': r_w, 'r_y': r_y, 's': s,
@@ -115,7 +106,7 @@ def keygen(sim: BilinearGroupSimulator, Q: SimpleQAP, field):
         'beta': beta, 'gamma': gamma
     }
 
-    print("secrets", secrets)
+    print("secrets:\n", secrets)
 
     return EK, VK, secrets
 
@@ -126,7 +117,7 @@ def prover_make_proof(sim: BilinearGroupSimulator, Q: SimpleQAP, EK, secrets, F,
     """
     # c: lista de tamanho m+1 com coeficientes c_k em F.
     c = evaluate_circuit(F, u)
-    print("Circuit coeficients: ", c)
+    print("Circuit coeficients: \n", c)
     s = secrets['s']
     r_v = secrets['r_v']; r_w = secrets['r_w']; r_y = secrets['r_y']
 
@@ -144,15 +135,8 @@ def prover_make_proof(sim: BilinearGroupSimulator, Q: SimpleQAP, EK, secrets, F,
     # dividir p por t(x)
     h, rem = p.quo_rem(Q.t)
     if rem != 0:
-        error = 'p(x) não é divisível por t(x) — prova inválida (verifique QAP ou coefs).'
-        print(error)
-        print("p: ", p)
-        print("v_total: ", v_total)
-        print("w_total: ", w_total)
-        print("y_total: ", y_total)
-        print("t: ", Q.t)
-        print("h: ", h)
-        raise ValueError(error)
+        print('p(x) não é divisível por t(x) — prova inválida. Construindo uma prova FALSA')
+
 
     v_mid_poly = Q.R(0)
     w_mid_poly = Q.R(0)
@@ -162,19 +146,10 @@ def prover_make_proof(sim: BilinearGroupSimulator, Q: SimpleQAP, EK, secrets, F,
         w_mid_poly += c[k] * Q.w[k]
         y_mid_poly += c[k] * Q.y[k]
 
-    #print("v_mid_poly: ", v_mid_poly)
-    #print("w_mid_poly: ", w_mid_poly)
-    #print("y_mid_poly: ", y_mid_poly)
-    #print("s", s)
-
     # avaliações em s
     v_mid_s = v_mid_poly(s)
     w_mid_s = w_mid_poly(s)
     y_mid_s = y_mid_poly(s)
-
-    #print("v_mid_s: ", v_mid_s)
-    #print("w_mid_s: ", w_mid_s)
-    #rint("y_mid_s: ", y_mid_s)
 
     proof = {
         'g_v_mid': sim.g_pow(r_v * v_mid_s),
@@ -186,7 +161,7 @@ def prover_make_proof(sim: BilinearGroupSimulator, Q: SimpleQAP, EK, secrets, F,
         'g_alpha_y_ymid': sim.g_pow(r_y * secrets['alpha_y'] * y_mid_s),
         'g_beta_vwy': sim.g_pow(secrets['beta'] * (r_v * v_mid_s + r_w * w_mid_s + r_y * y_mid_s))
     }
-    print("proof: ", proof)
+    print("proof: \n", proof)
 
     return proof
 
@@ -206,39 +181,23 @@ def verifier_check(sim: BilinearGroupSimulator, Q: SimpleQAP, VK, proof, public_
         g_v_io_comb = sim.element_mul(g_v_io_comb, sim.g_pow(c * (VK_get_eval(VK,'v',k))))
         g_w_io_comb = sim.element_mul(g_w_io_comb, sim.g_pow(c * (VK_get_eval(VK,'w',k))))
         g_y_io_comb = sim.element_mul(g_y_io_comb, sim.g_pow(c * (VK_get_eval(VK,'y',k))))
-        #print(c)
-        #print("g_v_io_comb", g_v_io_comb)
-        #print("g_w_io_comb", g_w_io_comb)
-        #print("g_y_io_comb", g_y_io_comb)
-        #print("================")
 
-    #print("g_v_io_comb", g_v_io_comb)
-    #print("g_w_io_comb", g_w_io_comb)
-    #print("g_y_io_comb", g_y_io_comb)
 
     # juntar com valores mid vindos da prova e o índice 0 (constantes)
     lhs1 = sim.element_mul(VK['g_v_io'][0], sim.element_mul(g_v_io_comb, proof['g_v_mid']))
     lhs2 = sim.element_mul(VK['g_w_io'][0], sim.element_mul(g_w_io_comb, proof['g_w_mid']))
 
-    #print("lhs1: ", lhs1)
-    #print("lhs2: ", lhs2)
 
     # e(g^{v_total}, g^{w_total})
     e_left = sim.pairing(lhs1, lhs2) # (1)
 
-    #print("e_left: ", e_left)
     e_right_1 = sim.pairing(VK['g_t_s_y'], proof['g_h'])
     rhs_y = sim.element_mul(VK['g_y_io'][0], sim.element_mul(g_y_io_comb, proof['g_y_mid']))
     e_right_2 = sim.pairing(rhs_y, sim.g)
 
-    #print("e_right1: ", e_right_1)
-    #print("rhs_y: ", rhs_y)
-    #print("e_right2: ", e_right_2)
     e_right =  sim.element_mul(e_right_1, e_right_2)
-    #print("e_right", e_right)
 
     check1 = sim.equal_GT(e_left, e_right) # (1) == (2)
-    #print("Check 1:", check1)
 
     # 2) Checagem dos subespaços: e(g^{alpha_v}, g^{v_mid}) == e(g, g^{alpha_v v_mid})
     c2_1 = sim.pairing(VK['g_alpha_v'], proof['g_v_mid'])
@@ -283,8 +242,14 @@ if __name__ == '__main__':
 
     EK, VK, secrets = keygen(sim, Q, F)
 
-    # Testemunha do circuito
-    u = [F(1), F(22), F(23)]
+    # Testemunha de entrada do circuito:
+    u_in = [F(3), F(5), F(7)]
+
+    # Saída alegada:
+    # Pelo circuito, u_out = u_in[0] * u_in[1] * u_in[2]
+    u_out = F(105)  # 3 * 5 * 7 = 105
+
+    u = u_in + [u_out]
 
     # Será produzida uma prova para o resultado do circuito aplicado a entrada u
     c = evaluate_circuit(F, u)
@@ -293,5 +258,5 @@ if __name__ == '__main__':
 
     result = verifier_check(sim, Q, VK, proof, public_coeffs)
 
-    print('Resultado das checagens:', result)
+    print('\n\nResultado das checagens:', result)
     # espera-se True se tudo for consistente na simulação

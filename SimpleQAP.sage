@@ -101,21 +101,11 @@ def build_QAP(F: FiniteField):
     # t é a multiplicação de (x - rg) para cada porta g
     t_poly = (x - r5)*(x - r4)
 
-    #print(f"Para a raiz r4 = {r4}:")
-    #print("v_evaluated:", [v(r4) for v in v_polys])
-    #print("w_evaluated:", [w(r4) for w in w_polys])
-    #print("y_evaluated:", [y(r4) for y in y_polys])
-    #print("=============")
-    #print(f"Para a raiz r5 = {r5}:")
-    #print("v_evaluated:", [v(r5) for v in v_polys])
-    #print("w_evaluated:", [w(r5) for w in w_polys])
-    #print("y_evaluated:", [y(r5) for y in y_polys])
-
     return SimpleQAP(R, v_polys, w_polys, y_polys, t_poly, N=N)
 
 def evaluate_circuit(F: FiniteField, u: list[sage.rings.finite_rings.integer_mod.IntegerMod_int]):
-    if len(u) != 3:
+    if len(u) != 4:
         raise IndexError
     # c são os coeficientes dos fios do ciruito
-    c = [F(1), u[0], u[1], u[2], u[0]*u[1]*u[2], u[1]*u[2]]
+    c = [F(1), u[0], u[1], u[2], u[3], u[1]*u[2]]
     return c
