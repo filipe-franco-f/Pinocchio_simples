@@ -135,6 +135,7 @@ def prover_make_proof(sim: BilinearGroupSimulator, Q: SimpleQAP, EK, secrets, F,
     # dividir p por t(x)
     h, rem = p.quo_rem(Q.t)
     if rem != 0:
+        print("\n\n============================================================================")
         print('p(x) não é divisível por t(x) — prova inválida. Construindo uma prova FALSA')
 
 
